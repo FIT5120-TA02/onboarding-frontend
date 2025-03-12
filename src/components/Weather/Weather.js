@@ -9,18 +9,23 @@ const Weather = () => {
   const [error, setError] = useState(null);
   const [location, setLocation] = useState(null);
   const [place, setPlace] = useState("Loading...");
+  const [temperature, setTemperature] = useState(null); 
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (lat, lon) => {
     setLoading(true);
     setError(null);
     try {
-      const [uvResponse, locationResponse] = await Promise.all([
+      const [uvResponse, locationResponse, weatherResponse] = await Promise.all([
         axios.get(`${API_BASE_URL}/api/uv?lat=${lat}&lon=${lon}`),
         axios.get(`${API_BASE_URL}/api/location?lat=${lat}&lon=${lon}`),
+        axios.get(`${API_BASE_URL}/api/weather?lat=${lat}&lon=${lon}`)
       ]);
+
       setUvIndex(uvResponse.data.uvIndex);
       setPlace(locationResponse.data.location);
+      const tempCelsius = Math.round(weatherResponse.data.temperature);
+      setTemperature(tempCelsius); 
     } catch (err) {
       console.error("Error fetching data:", err);
       setError(err.response?.data?.error || "Failed to fetch data.");
@@ -59,13 +64,15 @@ const Weather = () => {
 
   return (
     <div className="weather-container">
-      <h2>UV Index Checker</h2>
+      <h1>UV Checker</h1>
+      <div style={{ fontSize: "50px", textAlign: "center" }}>
+        <p>Current UV Index: <strong>{uvIndex !== null ? uvIndex : "N/A"}</strong></p>
+      </div>
       <p>
         Location: <strong>{place}</strong>
       </p>
-      <p>
-        Current UV Index: <strong>{uvIndex !== null ? uvIndex : "N/A"}</strong>
-      </p>
+      <p>Current Temperature: <strong>{temperature !== null ? temperature : "N/A"} °C</strong></p>
+
     </div>
   );
 };
