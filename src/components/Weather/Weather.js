@@ -14,6 +14,8 @@ const Weather = () => {
   const [location, setLocation] = useState(null);
   const [place, setPlace] = useState("Loading...");
   const [temperature, setTemperature] = useState(null);
+  const [weatherMain, setWeatherMain] = useState(null);
+  const [isDaytime, setIsDaytime] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (lat, lon) => {
@@ -31,6 +33,11 @@ const Weather = () => {
 
       setUvIndex(weatherResponse.data.current.uvi);
       setTemperature(Math.round(weatherResponse.data.current.temp));
+      setWeatherMain(weatherResponse.data.current.weather[0].main);
+      setIsDaytime(
+        weatherResponse.data.current.dt > weatherResponse.data.current.sunrise &&
+        weatherResponse.data.current.dt < weatherResponse.data.current.sunset
+      );
       setPlace(locationResponse.data.results?.[0]?.formatted_address || "Unknown Location");
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -75,13 +82,22 @@ const Weather = () => {
   }, []);
 
   useEffect(() => {
-    if (location) {
+    if (location?.lat && location?.lon) {
       fetchData(location.lat, location.lon);
     }
   }, [location, fetchData]);
 
+  let bgClass = "day";
+  if (!isDaytime) {
+    bgClass = "night";
+  } else if (weatherMain === "Clouds" || weatherMain === "Mist" || weatherMain === "Fog") {
+    bgClass = "cloudy";
+  } else if (weatherMain === "Rain" || weatherMain === "Drizzle" || weatherMain === "Thunderstorm") {
+    bgClass = "rainy";
+  }
+
   return (
-    <div className="weather-container">
+    <div className={`weather-container ${bgClass}`}>
       <div className="header-container">
         <h1>UV Checker</h1>
         <SearchBar onSearch={handleSearch} />
@@ -98,7 +114,7 @@ const Weather = () => {
       <p>Location: <strong>{place}</strong></p>
       <p>Current Temperature: <strong>{temperature !== null ? temperature : "N/A"} °C</strong></p>
 
-      {location && <WeatherIcon lat={location.lat} lon={location.lon} />}
+      {location && weatherMain && <WeatherIcon lat={location.lat} lon={location.lon} />}
     </div>
   );
 };

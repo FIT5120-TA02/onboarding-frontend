@@ -1,17 +1,21 @@
 .header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  padding: 20px 40px; 
+  padding: 20px 40px;
   box-sizing: border-box;
-  background-color: #f8f9fa; 
+  background-color: #f8f9fa;
   border-bottom: 2px solid #ddd;
+  z-index: 1000;
 }
 
 .header-container h1 {
   margin: 0;
-  font-size: 28px; 
+  font-size: 28px;
   font-weight: bold;
   color: #333;
 }
@@ -27,7 +31,7 @@
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  width: 250px; 
+  width: 250px;
   transition: border-color 0.3s ease-in-out;
 }
 
@@ -49,4 +53,32 @@
 
 .search-bar button:hover {
   background-color: #0056b3;
+}
+
+.weather-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding-top: 80px;
+  transition: background-color 0.5s ease-in-out;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.day {
+  background-color: #87CEEB;
+}
+
+.night {
+  background-color: #2C3E50;
+}
+
+.cloudy {
+  background-color: #B0BEC5;
+}
+
+.rainy {
+  background-color: #37474F;
 }
