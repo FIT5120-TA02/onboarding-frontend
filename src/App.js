@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Weather from "./components/Weather/Weather";
-import WeatherIcon from "./components/Weather/WeatherIcon";
 import "./App.css";
 
 function App() {
@@ -23,16 +22,8 @@ function App() {
 
   return (
     <div className="App">
-
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {lat && lon ? (
-        <>
-          <Weather lat={lat} lon={lon} />
-          <WeatherIcon lat={lat} lon={lon} />
-        </>
-      ) : (
-        <p>Getting your location...</p>
-      )}
+      {lat && lon ? <Weather lat={lat} lon={lon} /> : <p>Getting your location...</p>}
     </div>
   );
 }

@@ -7,47 +7,68 @@ import {
   TiWeatherShower,
 } from "react-icons/ti";
 
-const API_BASE_URL = "http://localhost:3001";
+const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 
 function getIcon(weatherMain, isDaytime) {
-  if (weatherMain === "Clouds") {
-    return <TiWeatherCloudy />;
-  } else if (weatherMain === "Rain") {
-    return <TiWeatherShower />;
-  } else if (weatherMain === "Clear") {
-    return isDaytime ? <TiWeatherSunny /> : <TiWeatherNight />;
+  console.log("Weather condition received in getIcon:", weatherMain);
+
+  switch (weatherMain) {
+    case "Clouds":
+    case "Mist":
+    case "Fog":
+      return <TiWeatherCloudy />;
+    case "Rain":
+    case "Drizzle":
+    case "Thunderstorm":
+      return <TiWeatherShower />;
+    case "Clear":
+    case "Sunny": 
+      return isDaytime ? <TiWeatherSunny /> : <TiWeatherNight />;
+    default:
+      return <TiWeatherCloudy />;
   }
-  return <TiWeatherCloudy />;
 }
 
 const WeatherIcon = ({ lat, lon }) => {
-  const [weatherMain, setWeatherMain] = useState("Clear");
+  const [weatherMain, setWeatherMain] = useState(null);
   const [sunrise, setSunrise] = useState(null);
   const [sunset, setSunset] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!lat || !lon) return;
+
     const fetchWeather = async () => {
       try {
         const res = await axios.get(
-          `${API_BASE_URL}/api/weatherCondition?lat=${lat}&lon=${lon}`
+          `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&appid=${WEATHER_API_KEY}`
         );
-        setWeatherMain(res.data.weatherMain);
-        setSunrise(res.data.sunrise);
-        setSunset(res.data.sunset);
+
+        console.log("WeatherIcon API response:", res.data);
+
+        if (!res.data.current || !res.data.current.weather || res.data.current.weather.length === 0) {
+          throw new Error("Weather data is missing.");
+        }
+
+        const weatherMainValue = res.data.current.weather[0].main;
+        console.log("Extracted weather condition:", weatherMainValue);
+
+        setWeatherMain(weatherMainValue);
+        setSunrise(res.data.current.sunrise);
+        setSunset(res.data.current.sunset);
       } catch (err) {
         console.error("Error fetching weather condition:", err);
         setError("Failed to fetch weather condition.");
       }
     };
+
     fetchWeather();
   }, [lat, lon]);
 
   if (error) {
     return <p style={{ color: "red" }}>{error}</p>;
   }
-  if (sunrise === null || sunset === null) {
+  if (!weatherMain || sunrise === null || sunset === null) {
     return <p>Loading weather icon...</p>;
   }
 
@@ -61,4 +82,5 @@ const WeatherIcon = ({ lat, lon }) => {
     </div>
   );
 };
+
 export default WeatherIcon;
