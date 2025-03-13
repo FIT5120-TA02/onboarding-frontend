@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import SearchBar from "../SearchBar/SearchBar";
 import WeatherIcon from "./WeatherIcon";
+import UVWarning from "../UVWarning/UVWarning";
 import "./Weather.css";
 
 const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
@@ -91,6 +92,8 @@ const Weather = () => {
       <div style={{ fontSize: "50px", textAlign: "center", marginTop: "20px" }}>
         <p>Current UV Index: <strong>{uvIndex !== null ? uvIndex : "N/A"}</strong></p>
       </div>
+
+      <UVWarning uvIndex={uvIndex} />
 
       <p>Location: <strong>{place}</strong></p>
       <p>Current Temperature: <strong>{temperature !== null ? temperature : "N/A"} °C</strong></p>
