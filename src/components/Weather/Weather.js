@@ -85,17 +85,17 @@ const Weather = () => {
         <h1>UV Checker</h1>
         <SearchBar onSearch={handleSearch} />
       </div>
-  
+
       {error && <p style={{ color: "red" }}>{error}</p>}
-  
+
       <div style={{ fontSize: "50px", textAlign: "center", marginTop: "20px" }}>
         <p>Current UV Index: <strong>{uvIndex !== null ? uvIndex : "N/A"}</strong></p>
       </div>
-  
+
       <p>Location: <strong>{place}</strong></p>
       <p>Current Temperature: <strong>{temperature !== null ? temperature : "N/A"} °C</strong></p>
-  
-      <WeatherIcon lat={location.lat} lon={location.lon} />
+
+      {location && <WeatherIcon lat={location.lat} lon={location.lon} />}
     </div>
   );
 };

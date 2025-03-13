@@ -65,6 +65,10 @@ const WeatherIcon = ({ lat, lon }) => {
     fetchWeather();
   }, [lat, lon]);
 
+  if (!lat || !lon) {
+    return <p>Waiting for location...</p>;
+  }
+
   if (error) {
     return <p style={{ color: "red" }}>{error}</p>;
   }
