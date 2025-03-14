@@ -19,8 +19,15 @@ const Weather = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (lat, lon) => {
+    if (!lat || !lon) {
+      console.error("Invalid location coordinates");
+      setError("Invalid location data.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
+
     try {
       const [weatherResponse, locationResponse] = await Promise.all([
         axios.get(
@@ -38,7 +45,9 @@ const Weather = () => {
         weatherResponse.data.current.dt > weatherResponse.data.current.sunrise &&
         weatherResponse.data.current.dt < weatherResponse.data.current.sunset
       );
-      setPlace(locationResponse.data.results?.[0]?.formatted_address || "Unknown Location");
+
+      const formattedLocation = locationResponse.data.results?.[0]?.formatted_address || "Unknown Location";
+      setPlace(formattedLocation);
     } catch (err) {
       console.error("Error fetching data:", err);
       setError("Failed to fetch data.");
@@ -48,17 +57,40 @@ const Weather = () => {
   }, []);
 
   const handleSearch = async (query) => {
+    // If query is an object (lat/lon), update location directly
+    if (typeof query === "object" && query.lat && query.lon) {
+      console.log("Directly updating location:", query);
+      setLocation(query);
+      return;
+    }
+
+    // If query is not a string, show an error
+    if (typeof query !== "string") {
+      console.error("Invalid query:", query);
+      setError("Invalid input. Please enter a valid location.");
+      return;
+    }
+
+    query = query.trim();
+
+    if (!query) {
+      setError("Please enter a location.");
+      return;
+    }
+
     try {
       const res = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${query}, AU&region=au&key=${GOOGLE_MAPS_API_KEY}`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${GOOGLE_MAPS_API_KEY}`
       );
 
-      if (res.data.results.length === 0) {
+      if (!res.data.results || res.data.results.length === 0) {
         setError("Location not found. Try a more specific location.");
         return;
       }
 
       const { lat, lng } = res.data.results[0].geometry.location;
+      console.log("Updated location:", { lat, lon: lng });
+
       setLocation({ lat, lon: lng });
       setError(null);
     } catch (err) {
