@@ -3,14 +3,14 @@
   top: 0;
   left: 0;
   width: 100%;
+  height: 25vh; /* Adjust height as needed */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  box-sizing: border-box;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   background-color: #f8f9fa;
   border-bottom: 2px solid #ddd;
   z-index: 1000;
+  flex-direction: column; /* Stack title and search bar vertically */
 }
 
 .header-container h1 {
@@ -22,17 +22,22 @@
 
 .search-bar {
   display: flex;
-  gap: 12px;
-  margin-left: auto;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 30px; /* Adds spacing below the title */
 }
 
 .search-bar input {
+  width: 700px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 250px;
-  transition: border-color 0.3s ease-in-out;
+  border-radius: 25px; /* Makes it rounded */
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  text-align: left; /*Centers placeholder text*/
 }
 
 .search-bar input:focus {
@@ -46,7 +51,7 @@
   border: none;
   padding: 10px 15px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 25px;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 }
