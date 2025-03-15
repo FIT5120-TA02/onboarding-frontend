@@ -1,0 +1,14 @@
+.learn-more-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .learn-more-container img {
+    max-width: 80%;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+  
+  h2 {
+    margin-top: 20px;
+  }

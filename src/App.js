@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import LearnMore from "./components/LearnMore/LearnMore";
+import SkinCancer from "./components/SkinCancer/SkinCancer";
 import WeatherIcon from "./components/Weather/WeatherIcon";
 import UVWarning from "./components/UVWarning/UVWarning";
 import Weather from "./components/Weather/Weather";
@@ -65,6 +66,7 @@ const App = () => {
             }
           />
           <Route path="/learn-more" element={<LearnMore />} />
+          <Route path="/skin-cancer" element={<SkinCancer />} />
         </Routes>
       </div>
     </Router>
