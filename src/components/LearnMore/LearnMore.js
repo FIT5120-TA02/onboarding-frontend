@@ -53,8 +53,10 @@ const LearnMore = () => {
         const uvMapResponse = await axios.get(`${API_BASE_URL}/api/v1/weather/uv-index-heatmap?period=annual`);
         const tempMapResponse = await axios.get(`${API_BASE_URL}/api/v1/weather/temperature-map?temp_type=max&region=aus&period=dec`);
 
-        setUvMapUrl(uvMapResponse.data.url);
-        setTemperatureMapUrl(tempMapResponse.data.url);
+        const proxyBaseURL = `${API_BASE_URL}/api/v1/weather/proxy-image?url=`;
+
+        setUvMapUrl(proxyBaseURL + encodeURIComponent(uvMapResponse.data.url));
+        setTemperatureMapUrl(proxyBaseURL + encodeURIComponent(tempMapResponse.data.url));
       } catch (err) {
         console.error("Failed to fetch map data", err);
         setError("Failed to load map data.");
