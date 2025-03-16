@@ -10,6 +10,7 @@ const SkinCancer = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedChart, setSelectedChart] = useState("Trend of Skin Cancer Cases");
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/v1/skin-cancer/")
@@ -36,69 +37,84 @@ const SkinCancer = () => {
       {loading && <p>Loading...</p>}
       {error && <p className="error-text">{error}</p>}
 
-      {/* Debugging Log */}
-      {console.log("Rendering Charts with Data:", data)}
+      {/* Chart Selection Dropdown */}
+      <div className="chart-selector">
+        <label>Select Chart: </label>
+        <select value={selectedChart} onChange={(e) => setSelectedChart(e.target.value)}>
+          <option value="Trend of Skin Cancer Cases">Trend of Skin Cancer Cases</option>
+          <option value="Skin Cancer Cases by Age Group">Skin Cancer Cases by Age Group</option>
+          <option value="Raw Data">Raw Data</option>
+        </select>
+      </div>
 
-      {/* Line Chart */}
-      {data.length > 0 && (
-        <>
-          <h3>Trend of Skin Cancer Cases</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="age_group" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="count" stroke="#8884d8" />
-            </LineChart>
-          </ResponsiveContainer>
+      {/* Conditionally Render Charts */}
+      <div className="chart-container">
+        {selectedChart === "Trend of Skin Cancer Cases" && data.length > 0 && (
+          <div>
+            <h3>Trend of Skin Cancer Cases</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="age_group" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="count" stroke="#8884d8" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-          {/* Bar Chart */}
-          <h3>Skin Cancer Cases by Age Group</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="age_group" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </>
-      )}
+        {selectedChart === "Skin Cancer Cases by Age Group" && data.length > 0 && (
+          <div>
+            <h3>Skin Cancer Cases by Age Group</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data} margin={{ top: 30, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="age_group" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="count" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-      {/* Data Table */}
-      <h3>Raw Data</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Year</th>
-            <th>Sex</th>
-            <th>Age Group</th>
-            <th>Count</th>
-            <th>Rate</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.length > 0 ? (
-            data.map((item, index) => (
-              <tr key={index}>
-                <td>{item.year}</td>
-                <td>{item.sex}</td>
-                <td>{item.age_group}</td>
-                <td>{new Intl.NumberFormat().format(item.count)}</td>
-                <td>{item.age_specific_rate ? item.age_specific_rate.toFixed(2) : "N/A"}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No data available</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+        {selectedChart === "Raw Data" && (
+          <div>
+            <h3>Raw Data</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Sex</th>
+                  <th>Age Group</th>
+                  <th>Count</th>
+                  <th>Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.length > 0 ? (
+                  data.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.year}</td>
+                      <td>{item.sex}</td>
+                      <td>{item.age_group}</td>
+                      <td>{new Intl.NumberFormat().format(item.count)}</td>
+                      <td>{item.age_specific_rate ? item.age_specific_rate.toFixed(2) : "N/A"}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No data available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

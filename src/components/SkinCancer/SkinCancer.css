@@ -4,9 +4,25 @@
   margin: auto;
 }
 
-h3 {
+h2, h3 {
   text-align: center;
   margin-top: 20px;
+  padding-top: 20px;
+}
+
+.chart-selector {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.chart-selector label {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+select {
+  padding: 5px;
+  font-size: 16px;
 }
 
 table {
