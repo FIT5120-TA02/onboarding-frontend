@@ -15,7 +15,7 @@ const SkinCancer = () => {
   const [selectedChart, setSelectedChart] = useState("Trend of Skin Cancer Cases");
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/v1/skin-cancer/`)
+    axios.get(`${API_BASE_URL}/api/v1/skin-cancer/`)
       .then(response => {
         console.log("Skin Cancer Data:", response.data);
         if (Array.isArray(response.data.data)) {
