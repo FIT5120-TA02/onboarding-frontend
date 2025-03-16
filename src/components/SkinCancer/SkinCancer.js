@@ -6,6 +6,8 @@ import {
 } from "recharts";
 import "./SkinCancer.css";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const SkinCancer = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
@@ -13,7 +15,7 @@ const SkinCancer = () => {
   const [selectedChart, setSelectedChart] = useState("Trend of Skin Cancer Cases");
 
   useEffect(() => {
-    axios.get("http://13.210.180.12/api/v1/skin-cancer/")
+    axios.get(`${API_BASE_URL}/v1/skin-cancer/`)
       .then(response => {
         console.log("Skin Cancer Data:", response.data);
         if (Array.isArray(response.data.data)) {
