@@ -18,8 +18,8 @@ const LearnMore = () => {
   useEffect(() => {
     const fetchHistoricalData = async () => {
       try {
-        const tempResponse = await axios.get("http://127.0.0.1:8000/api/v1/weather/temperature-records");
-        const uvResponse = await axios.get("http://127.0.0.1:8000/api/v1/weather/uv-records");
+        const tempResponse = await axios.get("http://13.210.180.12/api/v1/weather/temperature-records");
+        const uvResponse = await axios.get("http://13.210.180.12/api/v1/weather/uv-records");
 
         // Format temperature data
         const formattedTempData = tempResponse.data.map(record => ({
@@ -48,8 +48,8 @@ const LearnMore = () => {
   useEffect(() => {
     const fetchMaps = async () => {
       try {
-        const uvMapResponse = await axios.get("http://127.0.0.1:8000/api/v1/weather/uv-index-heatmap?period=annual");
-        const tempMapResponse = await axios.get("http://127.0.0.1:8000/api/v1/weather/temperature-map?temp_type=max&region=aus&period=dec");
+        const uvMapResponse = await axios.get("http://13.210.180.12/api/v1/weather/uv-index-heatmap?period=annual");
+        const tempMapResponse = await axios.get("http://13.210.180.12/api/v1/weather/temperature-map?temp_type=max&region=aus&period=dec");
 
         setUvMapUrl(uvMapResponse.data.url);
         setTemperatureMapUrl(tempMapResponse.data.url);

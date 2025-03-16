@@ -13,7 +13,7 @@ const SkinCancer = () => {
   const [selectedChart, setSelectedChart] = useState("Trend of Skin Cancer Cases");
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/v1/skin-cancer/")
+    axios.get("http://13.210.180.12/api/v1/skin-cancer/")
       .then(response => {
         console.log("Skin Cancer Data:", response.data);
         if (Array.isArray(response.data.data)) {
