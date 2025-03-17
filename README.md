@@ -66,8 +66,8 @@ REACT_APP_API_BASE_URL=your_backend_api_url
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/uv-shield.git
-   cd uv-shield
+   https://github.com/FIT5120-TA02/onboarding-frontend.git
+   cd onboarding-frontend
    ```
 
 2. Install dependencies:
@@ -105,10 +105,6 @@ This application integrates with:
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgements
 
