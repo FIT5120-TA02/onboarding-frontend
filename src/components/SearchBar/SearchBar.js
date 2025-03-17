@@ -3,7 +3,7 @@ import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import axios from "axios";
 import "./SearchBar.css";
 
-const API_BASE_URL = "https://api.uvchecker.net";
+const API_BASE_URL = "https://api.uvchecker.net"; // TODO: Remove fallback
 
 /**
  * SearchBar component for location search
@@ -15,7 +15,7 @@ const API_BASE_URL = "https://api.uvchecker.net";
 const SearchBar = ({ onSearch, initialLocation }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  // const [selectedPlace, setSelectedPlace] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [showSelectMessage, setShowSelectMessage] = useState(false);
@@ -116,7 +116,7 @@ const SearchBar = ({ onSearch, initialLocation }) => {
   // Handle selection of a place from the suggestions
   const handleSelectSuggestion = (place) => {
     setQuery(place.description);
-    setSelectedPlace(place);
+    // setSelectedPlace(place);
     setSuggestions([]);
     setShowSelectMessage(false);
 
@@ -173,7 +173,7 @@ const SearchBar = ({ onSearch, initialLocation }) => {
             onClick={() => {
               setQuery("");
               setSuggestions([]);
-              setSelectedPlace(null);
+              // setSelectedPlace(null);
               setShowSelectMessage(false);
             }}
           >

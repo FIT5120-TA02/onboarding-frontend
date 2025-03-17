@@ -15,7 +15,7 @@ import {
 } from "recharts";
 import "./LearnMore.css";
 
-const API_BASE_URL = "https://api.uvchecker.net";
+const API_BASE_URL = "https://api.uvchecker.net"; // TODO: Remove fallback
 
 const LearnMore = () => {
   const [temperatureData, setTemperatureData] = useState([]);
@@ -288,16 +288,55 @@ const LearnMore = () => {
                   <div className="chart-item">
                     <h2>Temperature Trend</h2>
                     <ResponsiveContainer width="100%" height={400}>
-                      <LineChart data={temperatureData}>
-                        <XAxis dataKey="time" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <CartesianGrid strokeDasharray="3 3" />
+                      <LineChart
+                        data={temperatureData}
+                        margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
+                      >
+                        <XAxis
+                          dataKey="time"
+                          label={{
+                            value: "Date/Time",
+                            position: "insideBottom",
+                            offset: -20,
+                            fill: "#e0e0e0",
+                            fontSize: 14,
+                          }}
+                          tick={{ fill: "#8884d8" }}
+                        />
+                        <YAxis
+                          label={{
+                            value: "Temperature (°C)",
+                            angle: -90,
+                            position: "insideLeft",
+                            dy: 50,
+                            fill: "#e0e0e0",
+                            fontSize: 14,
+                          }}
+                          tick={{ fill: "#8884d8" }}
+                        />
+                        <Tooltip
+                          labelFormatter={(label) => `Time: ${label}`}
+                          formatter={(value) => [`${value}°C`, "Temperature"]}
+                        />
+                        <Legend
+                          verticalAlign="top"
+                          align="center"
+                          height={36}
+                          iconSize={12}
+                          wrapperStyle={{
+                            fontSize: 12,
+                            color: "#8884d8",
+                          }}
+                        />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                         <Line
                           type="monotone"
                           dataKey="temperature"
                           stroke="#8884d8"
+                          strokeWidth={2}
+                          dot={{ fill: "#8884d8", r: 4 }}
+                          activeDot={{ r: 6 }}
+                          name="Temperature"
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -308,13 +347,48 @@ const LearnMore = () => {
                 <div className="chart-item">
                   <h2>UV Index Trend</h2>
                   <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={uvData}>
-                      <XAxis dataKey="time" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <Bar dataKey="uv_index" fill="#82ca9d" />
+                    <BarChart
+                      data={uvData}
+                      margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
+                    >
+                      <XAxis
+                        dataKey="time"
+                        label={{
+                          value: "Date/Time",
+                          position: "insideBottom",
+                          offset: 0,
+                          fill: "#e0e0e0",
+                          fontSize: 14,
+                        }}
+                        tick={{ fill: "#82ca9d" }}
+                      />
+                      <YAxis
+                        label={{
+                          value: "UV Index",
+                          angle: -90,
+                          position: "insideLeft",
+                          dy: 50,
+                          fill: "#e0e0e0",
+                          fontSize: 14,
+                        }}
+                        tick={{ fill: "#82ca9d" }}
+                      />
+                      <Tooltip
+                        labelFormatter={(label) => `Time: ${label}`}
+                        formatter={(value) => [`${value}`, "UV Index"]}
+                      />
+                      <Legend
+                        verticalAlign="top"
+                        align="center"
+                        height={36}
+                        iconSize={12}
+                        wrapperStyle={{
+                          fontSize: 12,
+                          color: "#82ca9d",
+                        }}
+                      />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                      <Bar dataKey="uv_index" fill="#82ca9d" name="UV Index" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

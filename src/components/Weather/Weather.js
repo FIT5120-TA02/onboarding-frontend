@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "https://api.uvchecker.net";
+const API_BASE_URL = "https://api.uvchecker.net"; // TODO: Remove fallback
 
 /**
  * Weather component to fetch weather data
