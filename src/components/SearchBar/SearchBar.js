@@ -19,6 +19,7 @@ const SearchBar = ({ onSearch, initialLocation }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [showSelectMessage, setShowSelectMessage] = useState(false);
 
   const searchRef = useRef(null);
   const inputRef = useRef(null);
@@ -36,6 +37,7 @@ const SearchBar = ({ onSearch, initialLocation }) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setSuggestions([]);
         setIsFocused(false);
+        setShowSelectMessage(false);
       }
     };
 
@@ -44,6 +46,16 @@ const SearchBar = ({ onSearch, initialLocation }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Hide select message after a delay
+  useEffect(() => {
+    if (showSelectMessage) {
+      const timer = setTimeout(() => {
+        setShowSelectMessage(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSelectMessage]);
 
   // Fetch place suggestions from backend API
   const fetchPlaces = async (searchText) => {
@@ -79,24 +91,6 @@ const SearchBar = ({ onSearch, initialLocation }) => {
     }
   };
 
-  // Handle search when the user submits a selected location
-  const handleSearch = () => {
-    if (!selectedPlace || !selectedPlace.place_id) {
-      return;
-    }
-
-    // Get place details from backend API
-    getPlaceDetails(selectedPlace.place_id);
-
-    // Keep the query text in the search bar
-    setSuggestions([]);
-
-    // Blur input after search
-    if (inputRef.current) {
-      inputRef.current.blur();
-    }
-  };
-
   // Get place details from backend API
   const getPlaceDetails = async (placeId) => {
     try {
@@ -125,6 +119,7 @@ const SearchBar = ({ onSearch, initialLocation }) => {
     setQuery(place.description);
     setSelectedPlace(place);
     setSuggestions([]);
+    setShowSelectMessage(false);
 
     // Trigger search immediately after selection
     setTimeout(() => {
@@ -166,7 +161,12 @@ const SearchBar = ({ onSearch, initialLocation }) => {
             fetchPlaces(e.target.value);
           }}
           onFocus={() => setIsFocused(true)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setShowSelectMessage(true);
+            }
+          }}
         />
         {query && (
           <button
@@ -175,6 +175,7 @@ const SearchBar = ({ onSearch, initialLocation }) => {
               setQuery("");
               setSuggestions([]);
               setSelectedPlace(null);
+              setShowSelectMessage(false);
             }}
           >
             ×
@@ -184,6 +185,13 @@ const SearchBar = ({ onSearch, initialLocation }) => {
           <FaSearch />
         </button>
       </div>
+
+      {/* Select from dropdown message */}
+      {showSelectMessage && (
+        <div className="search-select-message">
+          Please select a location from the dropdown
+        </div>
+      )}
 
       {/* Loading indicator */}
       {isLoading && (
