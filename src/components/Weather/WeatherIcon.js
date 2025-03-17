@@ -7,7 +7,8 @@ import {
   TiWeatherShower,
 } from "react-icons/ti";
 
-const WEATHER_API_KEY = "3b9dc46109231789cb311fd094b97236";
+const WEATHER_API_KEY =
+  process.env.REACT_APP_WEATHER_API_KEY || "3b9dc46109231789cb311fd094b97236"; // TODO: Remove fallback
 
 function getIcon(weatherMain, isDaytime) {
   console.log("Weather condition received in getIcon:", weatherMain);
