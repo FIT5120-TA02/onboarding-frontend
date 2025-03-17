@@ -1,0 +1,51 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-primary);
+}
+
+.logo-icon {
+  color: var(--color-warning);
+}
+
+.logo-text {
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.5px;
+}
+
+/* Logo sizes */
+.logo-small .logo-icon {
+  font-size: 18px;
+}
+
+.logo-small .logo-text {
+  font-size: var(--font-size-md);
+}
+
+.logo-medium .logo-icon {
+  font-size: 24px;
+}
+
+.logo-medium .logo-text {
+  font-size: var(--font-size-lg);
+}
+
+.logo-large .logo-icon {
+  font-size: 32px;
+}
+
+.logo-large .logo-text {
+  font-size: var(--font-size-xl);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .logo-medium .logo-text {
+    display: none;
+  }
+  
+  .logo-large .logo-text {
+    font-size: var(--font-size-lg);
+  }
+}

@@ -2,11 +2,21 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid, BarChart, Bar
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  CartesianGrid,
+  BarChart,
+  Bar,
 } from "recharts";
 import "./LearnMore.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://0.0.0.0:8000";
 
 const LearnMore = () => {
   const [temperatureData, setTemperatureData] = useState([]);
@@ -15,116 +25,302 @@ const LearnMore = () => {
   const [temperatureMapUrl, setTemperatureMapUrl] = useState(null);
   const [selectedChart, setSelectedChart] = useState("UV Index Heatmap");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // UV Map options
+  const [uvPeriod, setUvPeriod] = useState("annual");
+
+  // Temperature Map options
+  const [tempType, setTempType] = useState("max");
+  const [tempRegion, setTempRegion] = useState("aus");
+  const [tempPeriod, setTempPeriod] = useState("annual");
+
+  // Month options for dropdowns
+  const months = [
+    { name: "January", value: "jan" },
+    { name: "February", value: "feb" },
+    { name: "March", value: "mar" },
+    { name: "April", value: "apr" },
+    { name: "May", value: "may" },
+    { name: "June", value: "jun" },
+    { name: "July", value: "jul" },
+    { name: "August", value: "aug" },
+    { name: "September", value: "sep" },
+    { name: "October", value: "oct" },
+    { name: "November", value: "nov" },
+    { name: "December", value: "dec" },
+  ];
+
+  // Region options for temperature map
+  const regions = [
+    { name: "Australia", value: "aus" },
+    { name: "New South Wales", value: "ns" },
+    { name: "Northern Territory", value: "nt" },
+    { name: "Queensland", value: "qd" },
+    { name: "South Australia", value: "sa" },
+    { name: "Tasmania", value: "ta" },
+    { name: "Victoria", value: "vc" },
+    { name: "Western Australia", value: "wa" },
+  ];
+
+  // Temperature type options
+  const tempTypes = [
+    { name: "Mean", value: "mean" },
+    { name: "Maximum", value: "max" },
+    { name: "Minimum", value: "min" },
+  ];
 
   // Fetch historical temperature and UV index data
   useEffect(() => {
     const fetchHistoricalData = async () => {
       try {
-        const tempResponse = await axios.get(`${API_BASE_URL}/api/v1/weather/temperature-records`);
-        const uvResponse = await axios.get(`${API_BASE_URL}/api/v1/weather/uv-records`);
+        const tempResponse = await axios.get(
+          `${API_BASE_URL}/api/v1/weather/temperature-records`
+        );
+        const uvResponse = await axios.get(
+          `${API_BASE_URL}/api/v1/weather/uv-records`
+        );
 
         // Format temperature data
-        const formattedTempData = tempResponse.data.map(record => ({
+        const formattedTempData = tempResponse.data.map((record) => ({
           time: moment(record.created_at).format("YYYY-MM-DD HH:mm"),
           temperature: record.temperature,
         }));
 
         // Format UV index data
-        const formattedUvData = uvResponse.data.map(record => ({
+        const formattedUvData = uvResponse.data.map((record) => ({
           time: moment(record.created_at).format("YYYY-MM-DD HH:mm"),
           uv_index: record.uv_index,
         }));
 
         setTemperatureData(formattedTempData);
         setUvData(formattedUvData);
+        setIsLoading(false);
       } catch (err) {
         console.error("Failed to fetch historical data", err);
         setError("Failed to load historical data.");
+        setIsLoading(false);
       }
     };
 
     fetchHistoricalData();
   }, []);
 
-  // Fetch maps
+  // Fetch UV map based on selected period
+  const fetchUvMap = async (period) => {
+    try {
+      setIsLoading(true);
+      const uvMapResponse = await axios.get(
+        `${API_BASE_URL}/api/v1/weather/uv-index-heatmap?period=${period}`
+      );
+      setUvMapUrl(`${API_BASE_URL}${uvMapResponse.data.url}`);
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch UV map data", err);
+      setError("Failed to load UV map data.");
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch temperature map based on selected options
+  const fetchTemperatureMap = async (type, region, period) => {
+    try {
+      setIsLoading(true);
+      const tempMapResponse = await axios.get(
+        `${API_BASE_URL}/api/v1/weather/temperature-map?temp_type=${type}&region=${region}&period=${period}`
+      );
+      setTemperatureMapUrl(`${API_BASE_URL}${tempMapResponse.data.url}`);
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch temperature map data", err);
+      setError("Failed to load temperature map data.");
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch initial maps
   useEffect(() => {
-    const fetchMaps = async () => {
-      try {
-        const uvMapResponse = await axios.get(`${API_BASE_URL}/api/v1/weather/uv-index-heatmap?period=annual`);
-        const tempMapResponse = await axios.get(`${API_BASE_URL}/api/v1/weather/temperature-map?temp_type=max&region=aus&period=dec`);
+    fetchUvMap(uvPeriod);
+    fetchTemperatureMap(tempType, tempRegion, tempPeriod);
+  }, [uvPeriod, tempType, tempRegion, tempPeriod]);
 
-        setUvMapUrl(uvMapResponse.data.url);
-        setTemperatureMapUrl(tempMapResponse.data.url);
-      } catch (err) {
-        console.error("Failed to fetch map data", err);
-        setError("Failed to load map data.");
-      }
-    };
+  // Handle UV period change
+  const handleUvPeriodChange = (e) => {
+    const newPeriod = e.target.value;
+    setUvPeriod(newPeriod);
+    fetchUvMap(newPeriod);
+  };
 
-    fetchMaps();
-  }, []);
+  // Handle temperature map option changes
+  const handleTempTypeChange = (e) => {
+    const newType = e.target.value;
+    setTempType(newType);
+    fetchTemperatureMap(newType, tempRegion, tempPeriod);
+  };
+
+  const handleTempRegionChange = (e) => {
+    const newRegion = e.target.value;
+    setTempRegion(newRegion);
+    fetchTemperatureMap(tempType, newRegion, tempPeriod);
+  };
+
+  const handleTempPeriodChange = (e) => {
+    const newPeriod = e.target.value;
+    setTempPeriod(newPeriod);
+    fetchTemperatureMap(tempType, tempRegion, newPeriod);
+  };
 
   return (
-    <div className="learn-more-container">
-      <h1>Learn More About Sunburn</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="learn-more-page default-bg">
+      <div className="learn-more-content">
+        <h1 className="page-title">Learn More About Sunburn</h1>
 
-      {/* Dropdown menu to select charts */}
-      <div className="chart-selector">
-        <label>Select Chart: </label>
-        <select value={selectedChart} onChange={(e) => setSelectedChart(e.target.value)}>
-          <option value="UV Index Heatmap">UV Index Heatmap</option>
-          <option value="Temperature Map">Temperature Map</option>
-          <option value="Temperature Trend">Temperature Trend</option>
-          <option value="UV Index Trend">UV Index Trend</option>
-        </select>
-      </div>
-
-      {/* Conditionally render the selected chart */}
-      <div className="chart-container">
-        {selectedChart === "UV Index Heatmap" && uvMapUrl && (
-          <div>
-            <h2>UV Index Heatmap</h2>
-            <img src={uvMapUrl} alt="UV Index Heatmap" width="80%" />
+        {/* Loading state */}
+        {isLoading && (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading data...</p>
           </div>
         )}
 
-        {selectedChart === "Temperature Map" && temperatureMapUrl && (
-          <div>
-            <h2>Temperature Map</h2>
-            <img src={temperatureMapUrl} alt="Temperature Map" width="80%" />
+        {/* Error message */}
+        {error && !isLoading && (
+          <div className="error-container">
+            <p className="error-message">{error}</p>
           </div>
         )}
 
-        {selectedChart === "Temperature Trend" && temperatureData.length > 0 && (
-          <div>
-            <h2>Temperature Trend</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={temperatureData}>
-                <XAxis dataKey="time" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Line type="monotone" dataKey="temperature" stroke="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+        {!isLoading && !error && (
+          <div className="learn-more-container">
+            {/* Dropdown menu to select charts */}
+            <div className="chart-selector">
+              <label>Select Chart: </label>
+              <select
+                value={selectedChart}
+                onChange={(e) => setSelectedChart(e.target.value)}
+              >
+                <option value="UV Index Heatmap">UV Index Heatmap</option>
+                <option value="Temperature Map">Temperature Map</option>
+                <option value="Temperature Trend">Temperature Trend</option>
+                <option value="UV Index Trend">UV Index Trend</option>
+              </select>
+            </div>
 
-        {selectedChart === "UV Index Trend" && uvData.length > 0 && (
-          <div>
-            <h2>UV Index Trend</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={uvData}>
-                <XAxis dataKey="time" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Bar dataKey="uv_index" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
+            {/* Conditionally render the selected chart */}
+            <div className="chart-container">
+              {selectedChart === "UV Index Heatmap" && (
+                <div className="chart-item">
+                  <h2>UV Index Heatmap</h2>
+
+                  {/* UV Map period selector */}
+                  <div className="chart-options">
+                    <div className="option-group">
+                      <label>Period: </label>
+                      <select value={uvPeriod} onChange={handleUvPeriodChange}>
+                        <option value="annual">Annual</option>
+                        {months.map((month) => (
+                          <option key={month.value} value={month.value}>
+                            {month.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {uvMapUrl && <img src={uvMapUrl} alt="UV Index Heatmap" />}
+                </div>
+              )}
+
+              {selectedChart === "Temperature Map" && (
+                <div className="chart-item">
+                  <h2>Temperature Map</h2>
+
+                  {/* Temperature Map options */}
+                  <div className="chart-options">
+                    <div className="option-group">
+                      <label>Temperature Type: </label>
+                      <select value={tempType} onChange={handleTempTypeChange}>
+                        {tempTypes.map((type) => (
+                          <option key={type.value} value={type.value}>
+                            {type.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="option-group">
+                      <label>Region: </label>
+                      <select
+                        value={tempRegion}
+                        onChange={handleTempRegionChange}
+                      >
+                        {regions.map((region) => (
+                          <option key={region.value} value={region.value}>
+                            {region.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="option-group">
+                      <label>Period: </label>
+                      <select
+                        value={tempPeriod}
+                        onChange={handleTempPeriodChange}
+                      >
+                        <option value="annual">Annual</option>
+                        {months.map((month) => (
+                          <option key={month.value} value={month.value}>
+                            {month.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {temperatureMapUrl && (
+                    <img src={temperatureMapUrl} alt="Temperature Map" />
+                  )}
+                </div>
+              )}
+
+              {selectedChart === "Temperature Trend" &&
+                temperatureData.length > 0 && (
+                  <div className="chart-item">
+                    <h2>Temperature Trend</h2>
+                    <ResponsiveContainer width="100%" height={400}>
+                      <LineChart data={temperatureData}>
+                        <XAxis dataKey="time" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Line
+                          type="monotone"
+                          dataKey="temperature"
+                          stroke="#8884d8"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+
+              {selectedChart === "UV Index Trend" && uvData.length > 0 && (
+                <div className="chart-item">
+                  <h2>UV Index Trend</h2>
+                  <ResponsiveContainer width="100%" height={400}>
+                    <BarChart data={uvData}>
+                      <XAxis dataKey="time" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <Bar dataKey="uv_index" fill="#82ca9d" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

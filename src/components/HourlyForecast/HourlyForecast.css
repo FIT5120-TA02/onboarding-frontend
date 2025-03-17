@@ -1,0 +1,125 @@
+.hourly-forecast-container {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.hourly-forecast-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.hourly-forecast {
+  display: flex;
+  overflow-x: auto;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  background-color: rgba(0, 60, 100, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hourly-forecast::-webkit-scrollbar {
+  height: 4px;
+}
+
+.hourly-forecast::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hourly-forecast::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.forecast-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.forecast-time {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.forecast-uv {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-temp {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* UV Index Colors */
+.forecast-uv.uv-low {
+  background-color: rgba(52, 199, 89, 0.2);
+  color: #FFFFFF;
+}
+
+.forecast-uv.uv-moderate {
+  background-color: rgba(255, 214, 10, 0.2);
+  color: #FFFFFF;
+}
+
+.forecast-uv.uv-high {
+  background-color: rgba(255, 149, 0, 0.2);
+  color: #FFFFFF;
+}
+
+.forecast-uv.uv-very-high {
+  background-color: rgba(255, 59, 48, 0.2);
+  color: #FFFFFF;
+}
+
+.forecast-uv.uv-extreme {
+  background-color: rgba(159, 43, 104, 0.2);
+  color: #FFFFFF;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .hourly-forecast {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+  
+  .forecast-item {
+    min-width: 50px;
+  }
+  
+  .forecast-time {
+    font-size: var(--font-size-xs);
+  }
+  
+  .forecast-uv {
+    width: 35px;
+    height: 35px;
+    font-size: 12px;
+  }
+  
+  .forecast-temp {
+    font-size: var(--font-size-xs);
+  }
+}

@@ -1,48 +1,70 @@
 import { useEffect, useCallback } from "react";
 import axios from "axios";
 
-const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://0.0.0.0:8000";
 
+/**
+ * Weather component to fetch weather data
+ * @param {Object} props - Component props
+ * @param {Object} props.location - Location coordinates
+ * @param {Function} props.setWeatherData - Function to set weather data
+ * @returns {null} This component doesn't render anything
+ */
 const Weather = ({ location, setWeatherData }) => {
-  const fetchData = useCallback(async (lat, lon) => {
-    if (!lat || !lon) {
-      console.error("Invalid location coordinates");
-      return;
-    }
+  const fetchData = useCallback(
+    async (lat, lon) => {
+      if (!lat || !lon) {
+        console.error("Invalid location coordinates");
+        return;
+      }
 
-    try {
-      const [weatherResponse, locationResponse] = await Promise.all([
-        axios.get(
-          `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,daily,alerts&units=metric&appid=${WEATHER_API_KEY}`
-        ),
-        axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${GOOGLE_MAPS_API_KEY}&result_type=locality`
-        ),
-      ]);
+      try {
+        // Get weather data from backend API
+        const weatherResponse = await axios.post(
+          `${API_BASE_URL}/api/v1/weather/`,
+          {
+            lat: lat,
+            lon: lon,
+            name: "SunSafe User", // Required by the API
+          }
+        );
 
-      const weatherMain = weatherResponse.data.current.weather[0].main;
-      const isDaytime =
-        weatherResponse.data.current.dt > weatherResponse.data.current.sunrise &&
-        weatherResponse.data.current.dt < weatherResponse.data.current.sunset;
+        const weatherData = weatherResponse.data;
 
-      let bgClass = "day";
-      if (!isDaytime) bgClass = "night";
-      else if (["Clouds", "Mist", "Fog"].includes(weatherMain)) bgClass = "cloudy";
-      else if (["Rain", "Drizzle", "Thunderstorm"].includes(weatherMain)) bgClass = "rainy";
+        // Determine background class based on weather conditions
+        const weatherMain = weatherData.current.weather[0].main;
+        const isDaytime =
+          weatherData.current.sunrise &&
+          weatherData.current.sunset &&
+          weatherData.current.sunrise < Date.now() / 1000 &&
+          Date.now() / 1000 < weatherData.current.sunset;
 
-      setWeatherData({
-        uvIndex: weatherResponse.data.current.uvi,
-        temperature: Math.round(weatherResponse.data.current.temp),
-        weatherMain,
-        isDaytime,
-        place: locationResponse.data.results?.[0]?.formatted_address || "Unknown Location",
-        bgClass,
-      });
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  }, [setWeatherData]);
+        let bgClass = "day";
+        if (!isDaytime) bgClass = "night";
+        else if (["Clouds", "Mist", "Fog"].includes(weatherMain))
+          bgClass = "cloudy";
+        else if (["Rain", "Drizzle", "Thunderstorm"].includes(weatherMain))
+          bgClass = "rainy";
+
+        // Set weather data for the app
+        setWeatherData({
+          uvIndex: weatherData.current.uvi,
+          temperature: Math.round(weatherData.current.temp),
+          weatherMain,
+          isDaytime,
+          place:
+            weatherData.location.name ||
+            weatherData.location.address ||
+            "Unknown Location",
+          bgClass,
+        });
+      } catch (err) {
+        console.error("Error fetching weather data:", err);
+      }
+    },
+    [setWeatherData]
+  );
 
   useEffect(() => {
     if (location?.lat && location?.lon) {
@@ -50,7 +72,7 @@ const Weather = ({ location, setWeatherData }) => {
     }
   }, [location, fetchData]);
 
-  return null; 
+  return null;
 };
 
 export default Weather;

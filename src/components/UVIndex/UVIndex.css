@@ -1,0 +1,122 @@
+.uv-index-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-lg);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.uv-index-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-6xl);
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform var(--transition-normal);
+}
+
+.uv-index-circle:hover {
+  transform: scale(1.05);
+}
+
+.uv-index-risk-label {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-full);
+  background-color: rgba(0, 60, 100, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* UV Index Categories - Low (0-2) */
+.uv-index-circle.uv-low {
+  background-color: rgba(52, 199, 89, 0.2);
+  color: #34C759;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+}
+
+.uv-index-risk-label.uv-low {
+  background-color: rgba(52, 199, 89, 0.2);
+  color: #FFFFFF;
+}
+
+/* UV Index Categories - Moderate (3-5) */
+.uv-index-circle.uv-moderate {
+  background-color: rgba(255, 214, 10, 0.2);
+  color: #FFD60A;
+  border: 1px solid rgba(255, 214, 10, 0.3);
+}
+
+.uv-index-risk-label.uv-moderate {
+  background-color: rgba(255, 214, 10, 0.2);
+  color: #FFFFFF;
+}
+
+/* UV Index Categories - High (6-7) */
+.uv-index-circle.uv-high {
+  background-color: rgba(255, 149, 0, 0.2);
+  color: #FF9500;
+  border: 1px solid rgba(255, 149, 0, 0.3);
+}
+
+.uv-index-risk-label.uv-high {
+  background-color: rgba(255, 149, 0, 0.2);
+  color: #FFFFFF;
+}
+
+/* UV Index Categories - Very High (8-10) */
+.uv-index-circle.uv-very-high {
+  background-color: rgba(255, 59, 48, 0.2);
+  color: #FF3B30;
+  border: 1px solid rgba(255, 59, 48, 0.3);
+}
+
+.uv-index-risk-label.uv-very-high {
+  background-color: rgba(255, 59, 48, 0.2);
+  color: #FFFFFF;
+}
+
+/* UV Index Categories - Extreme (11+) */
+.uv-index-circle.uv-extreme {
+  background-color: rgba(159, 43, 104, 0.2);
+  color: #9F2B68;
+  border: 1px solid rgba(159, 43, 104, 0.3);
+}
+
+.uv-index-risk-label.uv-extreme {
+  background-color: rgba(159, 43, 104, 0.2);
+  color: #FFFFFF;
+}
+
+.uv-index-circle.uv-unknown {
+  background-color: rgba(142, 142, 147, 0.2);
+  color: #8E8E93;
+  border: 1px solid rgba(142, 142, 147, 0.3);
+}
+
+.uv-index-risk-label.uv-unknown {
+  background-color: rgba(142, 142, 147, 0.2);
+  color: #FFFFFF;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .uv-index-circle {
+    width: 150px;
+    height: 150px;
+    font-size: var(--font-size-5xl);
+  }
+  
+  .uv-index-risk-label {
+    font-size: var(--font-size-lg);
+  }
+}

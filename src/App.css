@@ -1,53 +1,11 @@
-.App {
-  text-align: center;
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 8vh; /* Reduce height */
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  font-weight: bold;
-  z-index: 1000;
-}
-
-.weather-container {
+.app {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding-top: 12vh; 
-  transition: background-color 0.5s ease-in-out;
-  color: #ffffff;
-  font-family: 'Poppins', sans-serif;
 }
 
-.day {
-  background-color: #87CEEB;
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-
-.night {
-  background-color: #2C3E50;
-}
-
-.cloudy {
-  background-color: #B0BEC5;
-}
-
-.rainy {
-  background-color: #37474F;
-}
-
-.weather-container {
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out;
-}
-
