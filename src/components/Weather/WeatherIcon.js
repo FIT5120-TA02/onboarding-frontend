@@ -7,7 +7,8 @@ import {
   TiWeatherShower,
 } from "react-icons/ti";
 
-const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+const WEATHER_API_KEY =
+  process.env.REACT_APP_WEATHER_API_KEY || "3b9dc46109231789cb311fd094b97236";
 
 function getIcon(weatherMain, isDaytime) {
   console.log("Weather condition received in getIcon:", weatherMain);
@@ -22,7 +23,7 @@ function getIcon(weatherMain, isDaytime) {
     case "Thunderstorm":
       return <TiWeatherShower />;
     case "Clear":
-    case "Sunny": 
+    case "Sunny":
       return isDaytime ? <TiWeatherSunny /> : <TiWeatherNight />;
     default:
       return <TiWeatherCloudy />;
@@ -46,7 +47,11 @@ const WeatherIcon = ({ lat, lon }) => {
 
         console.log("WeatherIcon API response:", res.data);
 
-        if (!res.data.current || !res.data.current.weather || res.data.current.weather.length === 0) {
+        if (
+          !res.data.current ||
+          !res.data.current.weather ||
+          res.data.current.weather.length === 0
+        ) {
           throw new Error("Weather data is missing.");
         }
 
@@ -80,11 +85,7 @@ const WeatherIcon = ({ lat, lon }) => {
   const isDaytime = now > sunrise && now < sunset;
   const icon = getIcon(weatherMain, isDaytime);
 
-  return (
-    <div style={{ fontSize: "100px", textAlign: "center" }}>
-      {icon}
-    </div>
-  );
+  return <div style={{ fontSize: "100px", textAlign: "center" }}>{icon}</div>;
 };
 
 export default WeatherIcon;
