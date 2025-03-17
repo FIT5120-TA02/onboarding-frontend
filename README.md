@@ -57,7 +57,6 @@ Create a `.env` file in the root directory with the following variables:
 
 ```
 REACT_APP_WEATHER_API_KEY=your_openweathermap_api_key
-REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 REACT_APP_API_BASE_URL=your_backend_api_url
 ```
 
