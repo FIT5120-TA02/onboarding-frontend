@@ -12,8 +12,7 @@ import {
 } from "recharts";
 import "./SkinCancer.css";
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://13.211.47.126"; // TODO: Remove fallback
+const API_BASE_URL = "http://13.211.47.126/api/"; // TODO: Remove fallback
 
 // Age group options
 const ageGroups = [

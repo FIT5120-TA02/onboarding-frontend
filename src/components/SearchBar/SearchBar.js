@@ -3,8 +3,7 @@ import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import axios from "axios";
 import "./SearchBar.css";
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://13.211.47.126"; // TODO: Remove fallback
+const API_BASE_URL = "http://13.211.47.126/api/"; // TODO: Remove fallback
 
 /**
  * SearchBar component for location search

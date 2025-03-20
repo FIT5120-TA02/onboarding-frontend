@@ -1,8 +1,7 @@
 import { useEffect, useCallback } from "react";
 import axios from "axios";
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://13.211.47.126"; // TODO: Remove fallback
+const API_BASE_URL = "http://13.211.47.126/api/"; // TODO: Remove fallback
 
 /**
  * Weather component to fetch weather data
