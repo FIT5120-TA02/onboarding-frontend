@@ -16,7 +16,7 @@ import {
 import "./LearnMore.css";
 
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "https://api.uvchecker.net"; // TODO: Remove fallback
+  process.env.REACT_APP_API_BASE_URL || "http://13.211.47.126"; // TODO: Remove fallback
 
 const LearnMore = () => {
   const [temperatureData, setTemperatureData] = useState([]);
